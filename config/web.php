@@ -17,6 +17,9 @@ $config = [
             'cookieValidationKey' => '_IctzkXAmrVNqbsevZcp2irmwEBRJrqU',
             'baseUrl' => '',
         ],
+        'formatter' => [
+            'datetimeFormat' => 'php:m/d/Y',
+        ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
@@ -52,6 +55,11 @@ $config = [
         ],
     ],
     'params' => $params,
+    'modules' => [
+        'admin' => [
+            'class' => 'app\modules\admin\Module',
+        ],
+    ],
 ];
 
 if (YII_ENV_DEV) {
