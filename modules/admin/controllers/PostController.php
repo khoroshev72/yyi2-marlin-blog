@@ -3,12 +3,14 @@
 namespace app\modules\admin\controllers;
 
 use app\modules\admin\models\Category;
+use app\modules\admin\models\UploadForm;
 use Yii;
 use app\modules\admin\models\Post;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 
 /**
  * PostController implements the CRUD actions for Post model.
@@ -37,12 +39,32 @@ class PostController extends Controller
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => Post::find(),
+            'query' => Post::find()->with('category'),
         ]);
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
         ]);
+    }
+
+    public function actionUpload($id)
+    {
+        $model = new UploadForm();
+        $post = Post::findOne($id);
+
+        if ($model->load(Yii::$app->request->post())){
+            $model->img = UploadedFile::getInstance($model, 'img');
+            if ($filename = $model->saveImage($post->img)){
+                $post->img = $filename;
+                if ($post->save(false)){
+                    Yii::$app->session->setFlash('success', 'You have successfully uploaded file');
+                }
+            } else {
+                Yii::$app->session->setFlash('error',  'You have unsuccessfully uploaded file');
+            }
+            return Yii::$app->response->refresh();
+         }
+        return $this->render('upload', compact('model', 'post'));
     }
 
     /**
@@ -68,7 +90,6 @@ class PostController extends Controller
         $model = new Post();
 
         $cats = Category::find()->all();
-        if ($model->load(Yii::$app->request->post())) debug($model, 1);
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
@@ -106,8 +127,8 @@ class PostController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
+        $model = $this->findModel($id);
+        $model->delete();
         return $this->redirect(['index']);
     }
 

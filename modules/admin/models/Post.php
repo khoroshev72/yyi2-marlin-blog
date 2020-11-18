@@ -39,6 +39,8 @@ class Post extends \yii\db\ActiveRecord
         return 'post';
     }
 
+    public $status = true;
+
     public function behaviors()
     {
         return [
@@ -63,7 +65,7 @@ class Post extends \yii\db\ActiveRecord
     {
         return [
             [['category_id', 'user_id', 'status', 'views'], 'integer'],
-            [['title', 'description', 'content'], 'required'],
+            [['title', 'description', 'content', 'category_id'], 'required'],
             [['description', 'content'], 'string'],
             [['created_at', 'updated_at', 'slug'], 'safe'],
             [['title', 'img'], 'string', 'max' => 255],
@@ -130,5 +132,21 @@ class Post extends \yii\db\ActiveRecord
     public function getTags()
     {
         return $this->hasMany(Tag::class, ['id' => 'tag_id'])->viaTable('post_tag', ['post_id' => 'id']);
+    }
+
+    public function getImage()
+    {
+        return $this->img ? '/uploads/' . $this->img : '/default.jpg';
+    }
+
+    public function beforeDelete()
+    {
+        if (!parent::beforeDelete()){
+            return false;
+        }
+        if ($this->img){
+            unlink('uploads/' . $this->img);
+        }
+        return true;
     }
 }
