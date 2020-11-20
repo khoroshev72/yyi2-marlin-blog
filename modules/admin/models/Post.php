@@ -2,11 +2,12 @@
 
 namespace app\modules\admin\models;
 
-use app\models\Tag;
+use app\modules\admin\models\Tag;
 use Yii;
 use yii\behaviors\SluggableBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "post".
@@ -41,6 +42,8 @@ class Post extends \yii\db\ActiveRecord
 
     public $status = true;
 
+    public $tag;
+
     public function behaviors()
     {
         return [
@@ -48,6 +51,7 @@ class Post extends \yii\db\ActiveRecord
                 'class' => SluggableBehavior::class,
                 'attribute' => 'title',
                 'slugAttribute' => 'slug',
+                'ensureUnique' => true,
             ],
             [
                 'class' => TimestampBehavior::class,
@@ -82,6 +86,7 @@ class Post extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'category_id' => 'Категория',
+            'tags' => 'Тэги',
             'user_id' => 'Пользователь',
             'status' => 'Статус',
             'title' => 'Наименование',
@@ -148,5 +153,36 @@ class Post extends \yii\db\ActiveRecord
             unlink('uploads/' . $this->img);
         }
         return true;
+    }
+
+    public function saveTags($tags)
+    {
+        if ($tags){
+            $this->unlinkAll('tags', true);
+            foreach ($tags as $tag_id){
+                $tag = Tag::findOne($tag_id);
+                $this->link('tags', $tag);
+            }
+        } else {
+            $this->unlinkAll('tags', true);
+        }
+    }
+
+    public function displayTags()
+    {
+        $tags = $this->tags;
+        $tags = ArrayHelper::map($tags, 'id', 'title');
+        return implode(', ', $tags);
+    }
+
+    public function selectedTags()
+    {
+        $selected = [];
+        if ($this->tags){
+            foreach ($this->tags as $tag){
+                $selected[$tag->id] = ['selected' => true];
+            }
+        }
+        return $selected;
     }
 }

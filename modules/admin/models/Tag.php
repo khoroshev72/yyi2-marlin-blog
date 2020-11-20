@@ -32,6 +32,7 @@ class Tag extends \yii\db\ActiveRecord
                 'class' => SluggableBehavior::class,
                 'attribute' => 'title',
                 'slugAttribute' => 'slug',
+                'ensureUnique' => true,
             ],
         ];
     }

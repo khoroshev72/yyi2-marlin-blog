@@ -38,6 +38,12 @@ $this->params['breadcrumbs'][] = $this->title;
                         return $data->category->title;
                     }
             ],
+            [
+                    'attribute' => 'tags',
+                    'value' => function($data){
+                        return !empty($data->tags) ? $data->displayTags() : 'No Tags';
+                    }
+            ],
             'user_id',
             [
                 'attribute' => 'status',

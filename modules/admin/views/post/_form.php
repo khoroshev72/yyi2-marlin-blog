@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
 /* @var $model app\modules\admin\models\Post */
@@ -14,7 +15,10 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'category_id')->dropDownList(\yii\helpers\ArrayHelper::map($cats, 'id', 'title'), ['prompt' => 'Выбор категории']) ?>
+    <?= $form->field($model, 'category_id')->dropDownList(ArrayHelper::map($cats, 'id', 'title'), ['prompt' => 'Выбор категории']) ?>
+
+    <?= $form->field($model, 'tag')->dropDownList(ArrayHelper::map($tags,  'id', 'title'), ['multiple'=>'multiple', 'name' => 'tags[]', 'options' => $model->selectedTags()]) ?>
+
 
     <?= $form->field($model, 'description')->textInput() ?>
 

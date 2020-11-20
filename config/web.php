@@ -19,7 +19,7 @@ $config = [
             'baseUrl' => '',
         ],
         'formatter' => [
-            'datetimeFormat' => 'php:m/d/Y',
+            'datetimeFormat' => 'php:m/d/Y h:i',
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',

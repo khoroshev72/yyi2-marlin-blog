@@ -3,6 +3,7 @@
 namespace app\modules\admin\controllers;
 
 use app\modules\admin\models\Category;
+use app\modules\admin\models\Tag;
 use app\modules\admin\models\UploadForm;
 use Yii;
 use app\modules\admin\models\Post;
@@ -88,13 +89,16 @@ class PostController extends Controller
     public function actionCreate()
     {
         $model = new Post();
-
+        $tags = Tag::find()->all();
         $cats = Category::find()->all();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $tags = Yii::$app->request->post('tags');
+            $model->saveTags($tags);
             return $this->redirect(['view', 'id' => $model->id]);
+
         }
 
-        return $this->render('create', compact('model', 'cats'));
+        return $this->render('create', compact('model', 'cats', 'tags'));
     }
 
     /**
@@ -107,15 +111,16 @@ class PostController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
+        $tags = Tag::find()->all();
         $cats = Category::find()->all();
 
-
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $tags = Yii::$app->request->post('tags');
+            $model->saveTags($tags);
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
-        return $this->render('update', compact('model', 'cats'));
+        return $this->render('update', compact('model', 'cats', 'tags'));
     }
 
     /**
