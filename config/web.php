@@ -5,7 +5,10 @@ $db = require __DIR__ . '/db.php';
 
 $config = [
     'id' => 'basic',
-    'language' => 'ru',
+    'language' => 'en',
+    'layout' => 'blog',
+    'name' => 'Yii2 Blog',
+    'defaultRoute' => 'main/index',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'aliases' => [
@@ -18,6 +21,16 @@ $config = [
             'cookieValidationKey' => '_IctzkXAmrVNqbsevZcp2irmwEBRJrqU',
             'baseUrl' => '',
         ],
+            'assetManager' => [
+                'bundles' => [
+                    'yii\web\JqueryAsset' => [
+                        'sourcePath' => null,   // не опубликовывать комплект
+                        'js' => [
+                            'blog/js/jquery-1.11.3.min.js',
+                        ]
+                    ],
+                ],
+            ],
         'formatter' => [
             'datetimeFormat' => 'php:m/d/Y h:i',
         ],
