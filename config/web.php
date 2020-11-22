@@ -42,7 +42,7 @@ $config = [
             'enableAutoLogin' => true,
         ],
         'errorHandler' => [
-            'errorAction' => 'site/error',
+            'errorAction' => 'main/error',
         ],
         'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',
@@ -65,6 +65,9 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                'post/<slug:[\w-]+>' => 'main/single',
+                'category/<slug:[\w-]+>' => 'main/category',
+                'tag/<slug:[\w-]+>' => 'main/tag',
             ],
         ],
     ],

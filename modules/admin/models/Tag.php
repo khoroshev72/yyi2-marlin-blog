@@ -2,7 +2,7 @@
 
 namespace app\modules\admin\models;
 
-use app\models\Post;
+use app\modules\admin\models\Post;
 use Yii;
 use yii\behaviors\SluggableBehavior;
 

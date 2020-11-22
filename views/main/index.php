@@ -1,5 +1,6 @@
 <?
 use yii\widgets\LinkPager;
+use yii\helpers\Url;
 
 ?>
 
@@ -8,25 +9,25 @@ use yii\widgets\LinkPager;
         <? foreach ($posts as $post): ?>
             <article class="post">
             <div class="post-thumb">
-                <a href="blog.html"><img src="<?='/uploads/' . $post->img ?>" alt="<?=$post->title ?>"></a>
+                <a href="<?=Url::to(['main/single', 'slug' => $post->slug]) ?>"><img src="<?=$post->getImage() ?>" alt="<?=$post->title ?>"></a>
 
-                <a href="blog.html" class="post-thumb-overlay text-center">
+                <a href="<?=Url::to(['main/single', 'slug' => $post->slug]) ?>" class="post-thumb-overlay text-center">
                     <div class="text-uppercase text-center">View Post</div>
                 </a>
             </div>
             <div class="post-content">
                 <header class="entry-header text-center text-uppercase">
-                    <h6><a href="#"> <?=$post->category->title ?></a></h6>
+                    <h6><a href="<?=Url::to(['main/category', 'slug' => $post->category->slug]) ?>"> <?=$post->category->title ?></a></h6>
 
-                    <h1 class="entry-title"><a href="#"><?=$post->title ?></a></h1>
+                    <h1 class="entry-title"><a href="<?=Url::to(['main/single', 'slug' => $post->slug]) ?>"><?=$post->title ?></a></h1>
 
 
                 </header>
                 <div class="entry-content">
                     <p><?=$post->description ?></p>
-
+                    <p>Views: <?=$post->views ?></p>
                     <div class="btn-continue-reading text-center text-uppercase">
-                        <a href="#" class="more-link">Continue Reading</a>
+                        <a href="<?=Url::to(['main/single', 'slug' => $post->slug]) ?>" class="more-link">Continue Reading</a>
                     </div>
                 </div>
                 <div class="social-share">
