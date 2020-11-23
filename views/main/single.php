@@ -1,4 +1,6 @@
 <?php
+
+use app\components\SidebarWidget;
 use yii\helpers\Url;
 use yii\helpers\Html;
 
@@ -196,5 +198,5 @@ use yii\helpers\Html;
             </form>
         </div><!--end leave comment-->
     </div>
-    <?=$this->render('//inc/sidebar') ?>
+    <?= SidebarWidget::widget()?>
 </div>

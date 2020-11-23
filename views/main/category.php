@@ -1,4 +1,6 @@
 <?php
+
+use app\components\SidebarWidget;
 use yii\helpers\Url;
 use yii\widgets\LinkPager;
 
@@ -46,5 +48,5 @@ use yii\widgets\LinkPager;
             <p>Не найдено ни одного поста...</p>
         <? endif; ?>
     </div>
-    <?=$this->render('//inc/sidebar') ?>
+    <?= SidebarWidget::widget()?>
 </div>

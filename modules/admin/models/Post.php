@@ -6,6 +6,7 @@ use app\modules\admin\models\Tag;
 use Yii;
 use yii\behaviors\SluggableBehavior;
 use yii\behaviors\TimestampBehavior;
+use yii\data\Pagination;
 use yii\db\Expression;
 use yii\helpers\ArrayHelper;
 
@@ -184,5 +185,31 @@ class Post extends \yii\db\ActiveRecord
             }
         }
         return $selected;
+    }
+
+    public static function getPopularPosts()
+    {
+        return self::find()->where(['status' => 1])->orderBy('views DESC')->limit(3)->all();
+    }
+
+    public static function getRecentPosts()
+    {
+        return self::find()->where(['status' => 1])->orderBy('id DESC')->limit(4)->all();
+    }
+
+    public static function getPagination($query, $perpage)
+    {
+        return new Pagination([
+            'totalCount' => $query->count(),
+            'defaultPageSize' => $perpage,
+            'forcePageParam' => false,
+        ]);
+    }
+
+    public static function getPaginationItems($query, $pages)
+    {
+        return $query->offset($pages->offset)
+            ->limit($pages->limit)
+            ->all();
     }
 }

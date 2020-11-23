@@ -28,16 +28,8 @@ class MainController extends Controller
     public function actionIndex()
     {
         $query = Post::find()->with('category')->where(['status' => 1])->orderBy('id DESC');
-
-        $pages = new Pagination([
-            'totalCount' => $query->count(),
-            'defaultPageSize' => 3,
-            'forcePageParam' => false,
-        ]);
-        $posts = $query->offset($pages->offset)
-            ->limit($pages->limit)
-            ->all();
-
+        $pages = Post::getPagination($query, 3);
+        $posts = Post::getPaginationItems($query, $pages);
         $this->view->title = \Yii::$app->name;
         return $this->render('index', compact('posts', 'pages'));
     }
@@ -45,11 +37,9 @@ class MainController extends Controller
     public function actionSingle($slug)
     {
         $post = Post::find()->where(['slug' => $slug, 'status' => 1])->one();
-
         if (!$post){
             throw new NotFoundHttpException('Страница не найдена');
         }
-
         $this->view->title = $post->title;
         return $this->render('single', compact('post'));
     }
@@ -57,21 +47,12 @@ class MainController extends Controller
     public function actionCategory($slug)
     {
         $category = Category::find()->where(['slug' => $slug])->one();
-
         if (!$category){
             throw new NotFoundHttpException('Страница не найдена');
         }
-
         $query = $category->getPosts()->where(['status' => 1])->orderBy('id DESC');
-        $pages = new Pagination([
-            'totalCount' => $query->count(),
-            'defaultPageSize' => 2,
-            'forcePageParam' => false,
-        ]);
-        $posts = $query->offset($pages->offset)
-            ->limit($pages->limit)
-            ->all();
-
+        $pages = Post::getPagination($query, 2);
+        $posts = Post::getPaginationItems($query, $pages);
         $this->view->title = $category->title;
         return $this->render('category', compact('posts',  'category','pages'));
     }
@@ -79,21 +60,12 @@ class MainController extends Controller
     public function actionTag($slug)
     {
         $tag = Tag::find()->where(['slug' => $slug])->one();
-
         if (!$tag){
             throw new NotFoundHttpException('Страница не найдена');
         }
-
         $query = $tag->getPosts()->with('category')->where(['status' => 1])->orderBy('id DESC');
-        $pages = new Pagination([
-            'totalCount' => $query->count(),
-            'defaultPageSize' => 2,
-            'forcePageParam' => false,
-        ]);
-        $posts = $query->offset($pages->offset)
-            ->limit($pages->limit)
-            ->all();
-
+        $pages = Post::getPagination($query, 2);
+        $posts = Post::getPaginationItems($query, $pages);
         $this->view->title = $tag->title;
         return $this->render('tag', compact('posts',  'pages'));
     }

@@ -1,6 +1,7 @@
 <?
 use yii\widgets\LinkPager;
 use yii\helpers\Url;
+use app\components\SidebarWidget;
 
 ?>
 
@@ -48,5 +49,5 @@ use yii\helpers\Url;
                 'pagination' => $pages
         ]) ?>
     </div>
-    <?=$this->render('//inc/sidebar')?>
+    <?= SidebarWidget::widget()?>
 </div>
