@@ -1,5 +1,6 @@
 <?
 
+use app\widgets\Alert;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use app\assets\BlogAsset;
@@ -53,9 +54,15 @@ BlogAsset::register($this);
                 </ul>
 
                 <ul class="nav navbar-nav text-uppercase pull-right">
-                    <li><a href="#">Register</a></li>
-                    <li><a href="#">Login</a></li>
-                    <li><a href="#">My profile</a></li>
+                    <? if (Yii::$app->user->isGuest): ?>
+                        <li><a href="<?=Url::to(['user/register']) ?>">Register</a></li>
+                        <li><a href="<?=Url::to(['user/login']) ?>">Login</a></li>
+                    <? else: ?>
+                        <li><a href="#">Hello, <?=Html::encode(Yii::$app->user->identity->login) ?></a></li>
+                        <li><a href="<?=Url::to(['user/logout']) ?>">Logout</a></li>
+                    <? endif; ?>
+
+
                 </ul>
 
             </div>
@@ -70,6 +77,9 @@ BlogAsset::register($this);
 <!--main content start-->
 <div class="main-content">
     <div class="container">
+        <?= Alert::widget() ?>
+<!--        --><?//=debug(Yii::$app->user->identity) ?>
+<!--        --><?// session_destroy() ?>
         <?=$content ?>
     </div>
 </div>
