@@ -12,6 +12,7 @@ class RegisterForm extends Model
     public $login;
     public $email;
     public $password;
+    public $password_repeat;
 
     public function rules()
     {
@@ -21,6 +22,7 @@ class RegisterForm extends Model
             ['email', 'email'],
             ['email', 'unique'],
             [['password', 'login'], 'string', 'min' => 3],
+            ['password', 'compare'],
         ];
     }
 

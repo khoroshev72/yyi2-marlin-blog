@@ -22,7 +22,7 @@ class LoginForm extends Model
             [['email', 'password'], 'required'],
             ['email', 'email'],
             // rememberMe must be a boolean value
-//            ['rememberMe', 'boolean'],
+            ['rememberMe', 'boolean'],
             // password is validated by validatePassword()
             ['password', 'validatePassword'],
             ['password', 'string', 'min' => 3],
@@ -54,5 +54,15 @@ class LoginForm extends Model
         }
 
         return $this->_user;
+    }
+
+    public function beforeValidate()
+    {
+        parent::beforeValidate();
+        if (!$this->getUser()){
+            Yii::$app->session->setFlash('danger', 'Неверный логин или пароль');;
+            return false;
+        }
+        return true;
     }
 }

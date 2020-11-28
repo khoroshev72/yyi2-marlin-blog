@@ -43,7 +43,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
 
     public static function findByEmail($email)
     {
-       return self::find()->where(['email' => $email])->one();
+       return self::find()->where(['email' => $email])->andWhere('verified_at IS NOT NULL')->one();
     }
 
     public function validatePassword($password)

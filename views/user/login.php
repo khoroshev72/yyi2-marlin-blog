@@ -43,6 +43,8 @@ use \yii\helpers\Html;
 
             <?=$form->field($model, 'password')->passwordInput(['id' => 'password', 'class' => 'form-control', 'placeholder' => 'Password']) ?>
 
+            <?=$form->field($model, 'rememberMe')->checkbox(['template' => "<div class='col-md-1'>{input}</div><div class='col-md-11'>{label}</div>"]) ?>
+
             <?=Html::submitButton('Login', ['class' => 'btn send-btn']) ?>
 
             <? ActiveForm::end() ?>

@@ -29,6 +29,8 @@ use yii\helpers\Html;
 
             <?=$form->field($model, 'password')->passwordInput(['class' => 'form-control', 'placeholder' => 'Password']) ?>
 
+            <?=$form->field($model, 'password_repeat')->passwordInput(['class' => 'form-control', 'placeholder' => 'Confirm Your Password']) ?>
+
             <?=Html::submitButton('Register', ['class' => 'btn send-btn']) ?>
 
             <? ActiveForm::end() ?>

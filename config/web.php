@@ -47,10 +47,15 @@ $config = [
         ],
         'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',
-            // send all mails to a file by default. You have to set
-            // 'useFileTransport' to false and configure a transport
-            // for the mailer to send real emails.
-            'useFileTransport' => true,
+            'transport' => [
+                'class' => 'Swift_SmtpTransport',
+                'host' => 'smtp.yandex.ru',
+                'username' => 'mmablogger@yandex.ru',
+                'password' => 'brainweb',
+                'port' => '465',
+                'encryption' => 'SSL',
+            ],
+            'useFileTransport' => false,
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -69,6 +74,7 @@ $config = [
                 'post/<slug:[\w-]+>' => 'main/single',
                 'category/<slug:[\w-]+>' => 'main/category',
                 'tag/<slug:[\w-]+>' => 'main/tag',
+                'verify/<token:[\w-]+>' => 'user/verify'
             ],
         ],
     ],
