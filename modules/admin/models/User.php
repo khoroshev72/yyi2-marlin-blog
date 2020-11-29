@@ -3,6 +3,7 @@
 namespace app\modules\admin\models;
 
 use Yii;
+use yii\web\BadRequestHttpException;
 use yii\web\IdentityInterface;
 
 /**
@@ -51,6 +52,26 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
         return Yii::$app->getSecurity()->validatePassword($password, $this->password);
     }
 
+    public static function registerLogoutHook()
+    {
+        $id = Yii::$app->user->id;
+        $user = self::findOne($id);
+        $user->auth_key = null;
+        $user->save();
+    }
+
+    public static function ifTokenExists($token)
+    {
+        if (strlen($token) !== 100) {
+            throw new BadRequestHttpException('Некорректный токен');
+        }
+        $user = self::find()->where(['token' => $token])->one();
+        if (!$user){
+            throw new BadRequestHttpException('Некорректный запрос');
+        }
+        return $user;
+    }
+
     /*Identitiy Interface*/
     public static function findIdentity($id)
     {
@@ -81,7 +102,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
      */
     public function getAuthKey()
     {
-
+        return $this->auth_key;
     }
 
     /**
@@ -90,7 +111,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
      */
     public function validateAuthKey($authKey)
     {
-        
+        return $this->getAuthKey() === $authKey;
     }
     /*Identitiy Interface*/
 

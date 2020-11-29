@@ -4,6 +4,7 @@
 namespace app\modules\admin\models;
 
 
+use Yii;
 use yii\base\Model;
 
 class RegisterForm extends Model
@@ -24,6 +25,14 @@ class RegisterForm extends Model
             [['password', 'login'], 'string', 'min' => 3],
             ['password', 'compare'],
         ];
+    }
+
+    public function sendVerifyEmail($user){
+        Yii::$app->mailer->compose('email_verify', compact('user'))
+            ->setFrom([Yii::$app->params['senderEmail'] => Yii::$app->params['senderName']])
+            ->setTo($user->email)
+            ->setSubject('Email Confirmation')
+            ->send();
     }
 
 

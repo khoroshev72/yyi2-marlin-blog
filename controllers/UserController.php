@@ -52,30 +52,18 @@ class UserController extends Controller
     public function actionRegister()
     {
         $model = new RegisterForm();
-
         if ($model->load(Yii::$app->request->post()) && $user = User::saveNewUser($model)){
-            Yii::$app->mailer->compose('email_verify', compact('user'))
-                ->setFrom([Yii::$app->params['senderEmail'] => Yii::$app->params['senderName']])
-                ->setTo($user->email)
-                ->setSubject('Email Confirmation')
-                ->send();
+            $model->sendVerifyEmail($user);
             Yii::$app->session->setFlash('success', 'Для заверешения процедуры регистрации проверьте вашу почту и подтвердите ваш email по ссылке в письме');
             return $this->goHome();
         }
-
         $this->view->title = 'Регистрация';
         return $this->render('register', compact('model'));
     }
 
     public function actionVerify($token)
     {
-        if (strlen($token) !== 100) {
-            throw new BadRequestHttpException('Некорректный токен');
-        }
-        $user = User::find()->where(['token' => $token])->one();
-        if (!$user){
-            throw new BadRequestHttpException('Некорректный запрос');
-        }
+        $user = User::ifTokenExists($token);
         $user->verified_at = date('Y-m-d h:i:s', time());
         $user->token = null;
         if ($user->save()){
@@ -89,12 +77,9 @@ class UserController extends Controller
 
     public function actionLogout()
     {
+        User::registerLogoutHook();
         Yii::$app->user->logout();
         return $this->goHome();
     }
 
-    public function actionTest()
-    {
-
-    }
 }
